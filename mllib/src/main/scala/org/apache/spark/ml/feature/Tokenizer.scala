@@ -29,14 +29,17 @@ import org.apache.spark.sql.types.{ArrayType, DataType, StringType}
  * @see [[RegexTokenizer]]
  */
 @Since("1.2.0")
-class Tokenizer @Since("1.4.0") (@Since("1.4.0") override val uid: String)
+class Tokenizer @Since("1.4.0") (@Since("1.4.0") override val uid: String ,
+                                 val separator: String = "\\s" )
   extends UnaryTransformer[String, Seq[String], Tokenizer] with DefaultParamsWritable {
 
   @Since("1.2.0")
   def this() = this(Identifiable.randomUID("tok"))
 
+  def this(separator: String = "\\s" ) = this(Identifiable.randomUID("tok"), separator)
+
   override protected def createTransformFunc: String => Seq[String] = {
-    _.toLowerCase.split("\\s")
+    _.toLowerCase.split(separator)
   }
 
   override protected def validateInputType(inputType: DataType): Unit = {
